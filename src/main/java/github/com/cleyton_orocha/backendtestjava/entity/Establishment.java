@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class Establishment {
     private Long id;
     private String name;
-    private String CNPJ;
+    private String cnpj;
     private Integer motorcycleSpots;
     private Integer carSpots;
     private Address address;
