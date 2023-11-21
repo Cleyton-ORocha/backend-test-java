@@ -76,10 +76,6 @@ public class EstablishmentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.phone1").value(estb.getPhones().getPhone1()))
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.phone2").value(estb.getPhones().getPhone2()));
 
-
-
-        // .andExpect(MockMvcResultMatchers.jsonPath("phones").value(estb.getPhones()))
-
     }
 
     private MockHttpServletRequestBuilder getRequest(String json) {
