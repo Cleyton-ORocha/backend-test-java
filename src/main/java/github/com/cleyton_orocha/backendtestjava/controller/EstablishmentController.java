@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import github.com.cleyton_orocha.backendtestjava.DTO.EstablishmentDTO;
 import github.com.cleyton_orocha.backendtestjava.service.EstablishmentService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/estb")
@@ -20,7 +21,7 @@ public class EstablishmentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EstablishmentDTO create(@RequestBody EstablishmentDTO estb) {
+    public EstablishmentDTO create(@RequestBody @Valid EstablishmentDTO estb) {
         return establishmentService.save(estb);
     }
 

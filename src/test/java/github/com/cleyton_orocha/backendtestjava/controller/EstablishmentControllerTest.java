@@ -1,5 +1,6 @@
 package github.com.cleyton_orocha.backendtestjava.controller;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
@@ -70,11 +71,23 @@ public class EstablishmentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("address.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.uf").value(estb.getAddress().getUF()))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.city").value(estb.getAddress().getCity()))
+                .andExpect(MockMvcResultMatchers.jsonPath("address.neighborhood").value(estb.getAddress().getNeighborhood()))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.street").value(estb.getAddress().getStreet()))
 
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.phone1").value(estb.getPhones().getPhone1()))
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.phone2").value(estb.getPhones().getPhone2()));
+
+    }
+
+    @Test
+    @DisplayName("A validation error should be thrown when there is not enough data to create the establishment")
+    public void createInvalidEstablishmentTest() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(new EstablishmentDTO());
+
+        mvc.perform(getRequest(json))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(6)));
 
     }
 
@@ -101,6 +114,7 @@ public class EstablishmentControllerTest {
         return Address.builder()
                 .UF("MG")
                 .city("Vespasiano")
+                .neighborhood("Serra Dourada")
                 .street("Serra do Contorno")
                 .build();
     }

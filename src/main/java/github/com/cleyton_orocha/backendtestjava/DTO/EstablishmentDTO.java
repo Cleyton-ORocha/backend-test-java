@@ -1,8 +1,13 @@
 package github.com.cleyton_orocha.backendtestjava.DTO;
 
+import org.hibernate.validator.constraints.Range;
+
 import github.com.cleyton_orocha.backendtestjava.entity.Address;
 import github.com.cleyton_orocha.backendtestjava.entity.Establishment;
 import github.com.cleyton_orocha.backendtestjava.entity.Phones;
+import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,12 +18,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EstablishmentDTO {
+
     private Long id;
+
+    @NotBlank(message = "The value canot be null or empty")
     private String name;
+
+    @NotBlank(message = "The value canot be null or empty")
     private String cnpj;
+
+    @Range(min = 1)
+    @Column(nullable = false)
+    @NotNull(message = "The value canot be null or empty")
     private Integer motorcycleSpots;
+
+    @Range(min = 1)
+    @Column(nullable = false)
+    @NotNull(message = "The value canot be null or empty")
     private Integer carSpots;
+
+    @NotNull(message = "The value canot be null")
     private Address address;
+
+    @NotNull(message = "The value canot be null")
     private Phones phones;
 
     public static Establishment toOrigin(EstablishmentDTO estb) {
@@ -28,8 +50,8 @@ public class EstablishmentDTO {
                 .cnpj(estb.getCnpj())
                 .motorcycleSpots(estb.getMotorcycleSpots())
                 .carSpots(estb.getCarSpots())
-                // .address(estb.getAddress())
-                // .phones(estb.getPhones())
+                .address(estb.getAddress())
+                .phones(estb.getPhones())
                 .build();
     }
 
@@ -40,8 +62,8 @@ public class EstablishmentDTO {
                 .cnpj(estb.getCnpj())
                 .motorcycleSpots(estb.getMotorcycleSpots())
                 .carSpots(estb.getCarSpots())
-                // .address(estb.getAddress())
-                // .phones(estb.getPhones())
+                .address(estb.getAddress())
+                .phones(estb.getPhones())
                 .build();
     }
 
