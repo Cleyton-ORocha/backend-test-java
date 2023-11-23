@@ -106,6 +106,12 @@ public class EstablishmentControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(errorMsg));
     }
 
+    @Test
+    @DisplayName("should generate an error when motorcycle spots are smaller than one")
+    public void shouldGenerateErrorWhenMotorcycleSpotsAreSmallerThanOne() throws Exception{
+
+    }
+
     private MockHttpServletRequestBuilder getRequest(String json) {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ESTB_API)
                 .contentType(MediaType.APPLICATION_JSON)
