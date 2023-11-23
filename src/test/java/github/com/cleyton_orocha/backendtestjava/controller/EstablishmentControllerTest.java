@@ -95,20 +95,28 @@ public class EstablishmentControllerTest {
 
     @Test
     @DisplayName("should generate an error when a cpnj is persisted in the database")
-    public void shoudGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception{
+    public void shoudGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception {
         String json = new ObjectMapper().writeValueAsString(createEstablishmentDTO());
         String errorMsg = "Cnpj is registered";
 
-        BDDMockito.given(establishmentService.save(Mockito.any(EstablishmentDTO.class))).willThrow(new BusinessException(errorMsg));
+        BDDMockito.given(establishmentService.save(Mockito.any(EstablishmentDTO.class)))
+                .willThrow(new BusinessException(errorMsg));
 
         mvc.perform(getRequest(json))
-        .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
-        .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(errorMsg));
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(errorMsg));
     }
 
     @Test
     @DisplayName("should generate an error when motorcycle spots are smaller than one")
-    public void shouldGenerateErrorWhenMotorcycleSpotsAreSmallerThanOne() throws Exception{
+    public void shouldGenerateErrorWhenMotorcycleSpotsAreSmallerThanOne() throws Exception {
+        EstablishmentDTO estb = createEstablishmentDTO();
+        estb.setMotorcycleSpots(-1);
+        String json = new ObjectMapper().writeValueAsString(estb);
+
+        mvc.perform(getRequest(json))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value("Motorcycle spots must be greater than zero"));
 
     }
 

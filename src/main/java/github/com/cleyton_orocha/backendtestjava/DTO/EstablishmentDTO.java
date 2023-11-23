@@ -27,14 +27,14 @@ public class EstablishmentDTO {
     @NotBlank(message = "The value canot be null or empty")
     private String cnpj;
 
-    @Range(min = 1)
     @Column(nullable = false)
     @NotNull(message = "The value canot be null or empty")
+    @Range(min = 1, message = "Motorcycle spots must be greater than zero")
     private Integer motorcycleSpots;
 
-    @Range(min = 1)
     @Column(nullable = false)
     @NotNull(message = "The value canot be null or empty")
+    @Range(min = 1, message = "Car spots must be greater than zero")
     private Integer carSpots;
 
     @NotNull(message = "The value canot be null")

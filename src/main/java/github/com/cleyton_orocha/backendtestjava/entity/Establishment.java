@@ -30,10 +30,10 @@ public class Establishment {
     @Column(unique = true)
     private String cnpj;
 
-    @Range(min = 1)
+    @Range(min = 1 , message = "Motorcycle spots must be greater than zero")
     private Integer motorcycleSpots;
 
-    @Range(min = 1)
+    @Range(min = 1 , message = "Car spots must be greater than zero")
     private Integer carSpots;
 
     @OneToOne
