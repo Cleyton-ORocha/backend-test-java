@@ -116,13 +116,22 @@ public class EstablishmentControllerTest {
 
         mvc.perform(getRequest(json))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value("Motorcycle spots must be greater than zero"));
+                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]")
+                        .value("Motorcycle spots must be greater than zero"));
 
     }
+
     @Test
     @DisplayName("should generate an error when motorcycle spots are smaller than one")
-    public void shouldGenerateErrorWhenCarSpotsAreSmallerThanOne() throws Exception{
+    public void shouldGenerateErrorWhenCarSpotsAreSmallerThanOne() throws Exception {
+        EstablishmentDTO estb = createEstablishmentDTO();
+        estb.setCarSpots(-1);
+        String json = new ObjectMapper().writeValueAsString(estb);
 
+        mvc.perform(getRequest(json))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors[0]")
+                        .value("Car spots must be greater than zero"));
     }
 
     private MockHttpServletRequestBuilder getRequest(String json) {
