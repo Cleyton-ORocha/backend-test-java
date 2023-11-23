@@ -3,6 +3,7 @@ package github.com.cleyton_orocha.backendtestjava.entity;
 import org.hibernate.validator.constraints.Range;
 
 import io.micrometer.common.lang.NonNullFields;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Establishment {
     private Long id;
     private String name;
 
+    @Column(unique = true)
     private String cnpj;
 
     @Range(min = 1)
