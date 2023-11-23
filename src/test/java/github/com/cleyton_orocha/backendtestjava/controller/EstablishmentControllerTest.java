@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import github.com.cleyton_orocha.backendtestjava.DTO.EstablishmentDTO;
 import github.com.cleyton_orocha.backendtestjava.entity.Address;
 import github.com.cleyton_orocha.backendtestjava.entity.Phones;
+import github.com.cleyton_orocha.backendtestjava.exception.BusinessException;
 import github.com.cleyton_orocha.backendtestjava.service.EstablishmentService;
 
 @WebMvcTest
@@ -71,7 +72,8 @@ public class EstablishmentControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("address.id").value(1L))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.uf").value(estb.getAddress().getUF()))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.city").value(estb.getAddress().getCity()))
-                .andExpect(MockMvcResultMatchers.jsonPath("address.neighborhood").value(estb.getAddress().getNeighborhood()))
+                .andExpect(MockMvcResultMatchers.jsonPath("address.neighborhood")
+                        .value(estb.getAddress().getNeighborhood()))
                 .andExpect(MockMvcResultMatchers.jsonPath("address.street").value(estb.getAddress().getStreet()))
 
                 .andExpect(MockMvcResultMatchers.jsonPath("phones.id").value(1L))
@@ -89,6 +91,19 @@ public class EstablishmentControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(6)));
 
+    }
+
+    @Test
+    @DisplayName("should generate an error when a cpnj is persisted in the database")
+    public void shoudGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception{
+        String json = new ObjectMapper().writeValueAsString(createEstablishmentDTO());
+        String errorMsg = "Cnpj is registered";
+
+        BDDMockito.given(establishmentService.save(Mockito.any(EstablishmentDTO.class))).willThrow(new BusinessException(errorMsg));
+
+        mvc.perform(getRequest(json))
+        .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
+        .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(errorMsg));
     }
 
     private MockHttpServletRequestBuilder getRequest(String json) {
