@@ -18,4 +18,8 @@ public class EstablishmentService {
         return EstablishmentDTO.toDTO(estbSaved);
     }
 
+    public EstablishmentDTO getReferenceById(Long id) {
+        return EstablishmentDTO.toDTO(establishmentRepository.getReferenceById(id));
+    }
+
 }

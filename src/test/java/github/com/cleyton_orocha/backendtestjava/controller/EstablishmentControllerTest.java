@@ -1,5 +1,7 @@
 package github.com.cleyton_orocha.backendtestjava.controller;
 
+import java.util.Optional;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +40,7 @@ public class EstablishmentControllerTest {
     MockMvc mvc;
 
     @Test
-    @DisplayName("Must register an establishment")
+    @DisplayName("must register an establishment")
     public void registerEstablishmentTest() throws Exception {
 
         EstablishmentDTO estb = createEstablishmentDTO();
@@ -60,7 +62,7 @@ public class EstablishmentControllerTest {
 
         String json = new ObjectMapper().writeValueAsString(estb);
 
-        mvc.perform(getRequest(json))
+        mvc.perform(getPostRequest(json))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 // .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty())
                 .andExpect(MockMvcResultMatchers.jsonPath("id").value(1L))
@@ -83,11 +85,11 @@ public class EstablishmentControllerTest {
     }
 
     @Test
-    @DisplayName("A validation error should be thrown when there is not enough data to create the establishment")
+    @DisplayName("a validation error should be thrown when there is not enough data to create the establishment")
     public void createInvalidEstablishmentTest() throws Exception {
         String json = new ObjectMapper().writeValueAsString(new EstablishmentDTO());
 
-        mvc.perform(getRequest(json))
+        mvc.perform(getPostRequest(json))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(6)));
 
@@ -95,14 +97,14 @@ public class EstablishmentControllerTest {
 
     @Test
     @DisplayName("should generate an error when a cpnj is persisted in the database")
-    public void shoudGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception {
+    public void shouldGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception {
         String json = new ObjectMapper().writeValueAsString(createEstablishmentDTO());
         String errorMsg = "Cnpj is registered";
 
         BDDMockito.given(establishmentService.save(Mockito.any(EstablishmentDTO.class)))
                 .willThrow(new BusinessException(errorMsg));
 
-        mvc.perform(getRequest(json))
+        mvc.perform(getPostRequest(json))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors[0]").value(errorMsg));
     }
@@ -114,7 +116,7 @@ public class EstablishmentControllerTest {
         estb.setMotorcycleSpots(-1);
         String json = new ObjectMapper().writeValueAsString(estb);
 
-        mvc.perform(getRequest(json))
+        mvc.perform(getPostRequest(json))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors[0]")
                         .value("Motorcycle spots must be greater than zero"));
@@ -122,19 +124,42 @@ public class EstablishmentControllerTest {
     }
 
     @Test
-    @DisplayName("should generate an error when motorcycle spots are smaller than one")
+    @DisplayName("should generate an error when cars spots are smaller than one")
     public void shouldGenerateErrorWhenCarSpotsAreSmallerThanOne() throws Exception {
         EstablishmentDTO estb = createEstablishmentDTO();
         estb.setCarSpots(-1);
         String json = new ObjectMapper().writeValueAsString(estb);
 
-        mvc.perform(getRequest(json))
+        mvc.perform(getPostRequest(json))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", Matchers.hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors[0]")
                         .value("Car spots must be greater than zero"));
     }
 
+    @Test
+    @DisplayName("should return an information about the Establishment")
+    public void shouldReturnInformationAboutEstablishment() throws Exception {
+        Long id = 1L;
+        EstablishmentDTO estb = createEstablishmentDTO();
+
+        BDDMockito.given(establishmentService.getReferenceById(id)).willReturn(estb);
+
+        estb.setId(id);
+
+        String json = new ObjectMapper().writeValueAsString(estb);
+
+        mvc.perform(getRequest(json))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("id").isNotEmpty());
+    }
+
     private MockHttpServletRequestBuilder getRequest(String json) {
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ESTB_API.concat("/" + 1L))
+                .accept(MediaType.APPLICATION_JSON);
+        return request;
+    }
+
+    private MockHttpServletRequestBuilder getPostRequest(String json) {
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.post(ESTB_API)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
