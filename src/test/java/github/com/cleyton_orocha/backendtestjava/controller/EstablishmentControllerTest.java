@@ -1,7 +1,5 @@
 package github.com.cleyton_orocha.backendtestjava.controller;
 
-import java.util.Optional;
-
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
