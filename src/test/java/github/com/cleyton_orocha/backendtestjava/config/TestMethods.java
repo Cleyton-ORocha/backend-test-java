@@ -1,16 +1,13 @@
 package github.com.cleyton_orocha.backendtestjava.config;
 
-import org.springframework.context.annotation.Configuration;
-
 import github.com.cleyton_orocha.backendtestjava.DTO.EstablishmentDTO;
 import github.com.cleyton_orocha.backendtestjava.entity.Address;
 import github.com.cleyton_orocha.backendtestjava.entity.Establishment;
 import github.com.cleyton_orocha.backendtestjava.entity.Phones;
 
-@Configuration
 public class TestMethods {
-
-    public EstablishmentDTO createEstablishmentDTO() {
+ 
+    public static EstablishmentDTO createEstablishmentDTO() {
         return EstablishmentDTO.builder()
                 .name("mockName")
                 .cnpj("mockCNPj")
@@ -21,7 +18,7 @@ public class TestMethods {
                 .build();
     }
 
-    public Establishment createEstablishment() {
+    public static Establishment createEstablishment() {
         return Establishment.builder()
                 .cnpj("mockCNPj")
                 .address(createAddressEstablishment())
@@ -31,7 +28,7 @@ public class TestMethods {
                 .build();
     }
 
-    public Address createAddressEstablishment() {
+    public static Address createAddressEstablishment() {
         return Address.builder()
                 .UF("MG")
                 .city("Vespasiano")
@@ -40,7 +37,7 @@ public class TestMethods {
                 .build();
     }
 
-    public Phones createPhonesEstablishment() {
+    public static Phones createPhonesEstablishment() {
         return Phones.builder()
                 .phone1("31996709760")
                 .phone2("31998288542")

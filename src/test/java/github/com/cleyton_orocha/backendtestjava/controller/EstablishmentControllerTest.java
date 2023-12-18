@@ -22,17 +22,13 @@ import github.com.cleyton_orocha.backendtestjava.DTO.EstablishmentDTO;
 import github.com.cleyton_orocha.backendtestjava.config.TestMethods;
 import github.com.cleyton_orocha.backendtestjava.exception.BusinessException;
 import github.com.cleyton_orocha.backendtestjava.service.EstablishmentService;
-import lombok.RequiredArgsConstructor;
 
 @WebMvcTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@RequiredArgsConstructor
 public class EstablishmentControllerTest {
 
         public static String ESTB_API = "/api/estb";
-
-        TestMethods testMethods;
 
         @MockBean
         EstablishmentService establishmentService;
@@ -44,14 +40,14 @@ public class EstablishmentControllerTest {
         @DisplayName("must register an establishment")
         public void registerEstablishmentTest() throws Exception {
 
-                EstablishmentDTO estb = testMethods.createEstablishmentDTO();
+                EstablishmentDTO estb = TestMethods.createEstablishmentDTO();
 
                 EstablishmentDTO estbSaved = EstablishmentDTO.builder()
                                 .id(1L)
                                 .name("mockName")
                                 .cnpj("mockCNPj")
-                                .address(testMethods.createAddressEstablishment())
-                                .phones(testMethods.createPhonesEstablishment())
+                                .address(TestMethods.createAddressEstablishment())
+                                .phones(TestMethods.createPhonesEstablishment())
                                 .motorcycleSpots(10)
                                 .carSpots(10)
                                 .build();
@@ -105,7 +101,7 @@ public class EstablishmentControllerTest {
         @Test
         @DisplayName("should generate an error when a cpnj is persisted in the database")
         public void shouldGenerateAnErrorWhenACnpjIsPersistedInTheDatabase() throws Exception {
-                String json = new ObjectMapper().writeValueAsString(testMethods);
+                String json = new ObjectMapper().writeValueAsString(TestMethods.createEstablishmentDTO());
                 String errorMsg = "Cnpj is registered";
 
                 BDDMockito.given(establishmentService.save(Mockito.any(EstablishmentDTO.class)))
@@ -119,7 +115,7 @@ public class EstablishmentControllerTest {
         @Test
         @DisplayName("should generate an error when motorcycle spots are smaller than one")
         public void shouldGenerateErrorWhenMotorcycleSpotsAreSmallerThanOne() throws Exception {
-                EstablishmentDTO estb = testMethods.createEstablishmentDTO();
+                EstablishmentDTO estb = TestMethods.createEstablishmentDTO();
                 estb.setMotorcycleSpots(-1);
                 String json = new ObjectMapper().writeValueAsString(estb);
 
@@ -133,7 +129,7 @@ public class EstablishmentControllerTest {
         @Test
         @DisplayName("should generate an error when cars spots are smaller than one")
         public void shouldGenerateErrorWhenCarSpotsAreSmallerThanOne() throws Exception {
-                EstablishmentDTO estb = testMethods.createEstablishmentDTO();
+                EstablishmentDTO estb = TestMethods.createEstablishmentDTO();
                 estb.setCarSpots(-1);
                 String json = new ObjectMapper().writeValueAsString(estb);
 
@@ -147,7 +143,7 @@ public class EstablishmentControllerTest {
         @DisplayName("should return an information about the Establishment")
         public void shouldReturnInformationAboutEstablishment() throws Exception {
                 Long id = 1L;
-                EstablishmentDTO estb = testMethods.createEstablishmentDTO();
+                EstablishmentDTO estb = TestMethods.createEstablishmentDTO();
 
                 BDDMockito.given(establishmentService.getReferenceById(id)).willReturn(estb);
 
