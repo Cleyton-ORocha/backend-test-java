@@ -12,8 +12,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import github.com.cleyton_orocha.backendtestjava.DTO.EstablishmentDTO;
 import github.com.cleyton_orocha.backendtestjava.config.TestMethods;
 import github.com.cleyton_orocha.backendtestjava.entity.Establishment;
+import github.com.cleyton_orocha.backendtestjava.exception.BusinessException;
 import github.com.cleyton_orocha.backendtestjava.repository.EstablishmentRepository;
 
 @ActiveProfiles("test")
@@ -54,4 +56,22 @@ public class EstablishmentServiceTest {
                 .isEqualTo(establishment.getMotorcycleSpots());
         Assertions.assertThat(foundEstablishment.get().getCarSpots()).isEqualTo(establishment.getCarSpots());
     }
+
+    @Test
+    @DisplayName("must throw a business error when the cnpj already exists")
+    public void mustThrowABusinessExceptionWhenTheDataAlreadyExists() {
+    
+        Establishment estb = TestMethods.createEstablishment();
+
+        Mockito.when(establishmentRepository.existsByCnpj(Mockito.anyString())).thenReturn(true);
+
+        Throwable exception = Assertions.catchThrowable(() ->  establishmentRepository.save(estb));
+
+        Assertions.assertThat(exception).isInstanceOf(BusinessException.class)
+            .hasMessage("");
+        
+        Mockito.verify(establishmentRepository, Mockito.never()).save(estb);
+
+    }
+
 }
