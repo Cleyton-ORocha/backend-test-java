@@ -24,7 +24,6 @@ public class EstablishmentServiceTest {
 
     EstablishmentService establishmentService;
 
-    
     @MockBean
     EstablishmentRepository establishmentRepository;
     
@@ -61,16 +60,16 @@ public class EstablishmentServiceTest {
     @DisplayName("must throw a business error when the cnpj already exists")
     public void mustThrowABusinessExceptionWhenTheDataAlreadyExists() {
     
-        Establishment estb = TestMethods.createEstablishment();
+        EstablishmentDTO estb = TestMethods.createEstablishmentDTO();
 
         Mockito.when(establishmentRepository.existsByCnpj(Mockito.anyString())).thenReturn(true);
 
-        Throwable exception = Assertions.catchThrowable(() ->  establishmentRepository.save(estb));
+        Throwable exception = Assertions.catchThrowable(() ->  establishmentService.save(estb));
 
         Assertions.assertThat(exception).isInstanceOf(BusinessException.class)
-            .hasMessage("");
+            .hasMessage("Cpnj is already registered, please contact the administration");
         
-        Mockito.verify(establishmentRepository, Mockito.never()).save(estb);
+        Mockito.verify(establishmentRepository, Mockito.never()).save(EstablishmentDTO.toOrigin(estb));
 
     }
 
